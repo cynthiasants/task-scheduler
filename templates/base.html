@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Task Scheduler</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- Material Kit CSS -->
+  <link href="/static/css/material-dashboard.css?v=2.1.2" rel="stylesheet" />
+  <script src="/static/js/core/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="wrapper ">
+    <div class="sidebar" data-color="azure" data-background-color="white">
+
+      <div class="logo">
+        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+          Task
+        </a>
+        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+          Scheduler
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item {% if page == 'dashboard' %} active {%endif%}">
+            <a class="nav-link" href="{{ url_for('index') }}">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item {% if page == 'tasks' %} active {%endif%}">
+            <a class="nav-link" href="{{ url_for('tasks') }}">
+              <i class="material-icons">task_alt</i>
+              <p>Tasks</p>
+            </a>
+          </li>
+          <li class="nav-item {% if page == 'makul' %} active {%endif%}">
+            <a class="nav-link" href="{{ url_for('makul') }}">
+              <i class="material-icons">book</i>
+              <p>Mata Kuliah</p>
+            </a>
+          </li>
+          <li class="nav-item {% if page == 'platform' %} active {%endif%}">
+            <a class="nav-link" href="{{ url_for('platform') }}">
+              <i class="material-icons">place</i>
+              <p>Platform Pengumpulan</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">
+              <i class="material-icons">logout</i>
+              <p>Logout</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <a class="navbar-brand" href="javascript:;">{{ page | capitalize }}</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end">
+            <!-- <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="javascript:;">
+                  <i class="material-icons">notifications</i> Notifications
+                </a>
+              </li>
+            </ul> -->
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+      <div class="content">
+        <div class="container-fluid">
+          <!-- your content here -->
+          {% include '%s.html' % page %}
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container-fluid">
+          <nav class="float-left">
+            <ul>
+              <li>
+                <a href="#">
+                  Task Scheduler
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>, made with <i class="material-icons">favorite</i> by
+            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web. Developed by <a href="https://github.com/cynthiasantsjaya"> Cynthia Sants Jaya </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+  <script src="/static/js/core/popper.min.js"></script>
+  <script src="/static/js/plugins/moment.min.js"></script>
+  <script src="/static/js/core/bootstrap-material-design.min.js"></script>
+  <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+  <script src="/static/js/plugins/jquery.bootstrap-wizard.js"></script>
+  <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+  <script src="/static/js/plugins/bootstrap-selectpicker.js"></script>
+  <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+  <script src="/static/js/plugins/bootstrap-datetimepicker.min.js"></script>
+  <script src="/static/js/plugins/jquery.dataTables.min.js"></script>
+  <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+  <script src="/static/js/plugins/jasny-bootstrap.min.js"></script>
+  <script src="/static/js/plugins/chartist.min.js"></script>
+  <script src="/static/js/plugins/bootstrap-notify.js"></script>
+  <script src="/static/js/material-dashboard.js?v=2.1.2" type="text/javascript"></script>
+  <script>
+    $("#dataTable").DataTable();
+    $(function () {
+             $('.datetimepicker').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
+             });
+         });
+  </script>
+</html>

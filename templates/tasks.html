@@ -1,0 +1,191 @@
+<style>
+  .table tbody tr {
+    /* background-color: #ee8383 !important; */
+  }
+</style>
+<div class="card">
+    <div class="card-body">
+        <a href="javascript:" id="btnAdd" class="btn btn-info" data-toggle="modal" data-target="#modalTasks"> <i class="fa fa-plus"></i> Tambah </a>
+        <div class="table-responsive">
+            <table class="table table-hovered table-striped" id="dataTable">
+                <thead>
+                    <th> No </th>
+                    <th> Judul Tugas </th>
+                    <th> Makul </th>
+                    <th> Pengumpulan </th>
+                    <th> Deadline </th>
+                    <th> Aksi </th>
+                </thead>
+                <tbody>
+                    {% for task in data.tasks %}
+                      <tr>
+                          <td> {{ loop.index }} </td>
+                          <td> {{ task.judul_task }} </td>
+                          <td> {{ task.nama_makul }} </td>
+                          <td> {{ task.nama_platform }} </td>
+                          <td> {{ task.date_end }} </td>
+                          <td width="20%">
+                            <a href="" onclick="event.preventDefault(); done({{ task.id_task }})" class="btn btn-success"> <i class="fa fa-check"></i> </a>
+                            <a href="{{ url_for('editTask', id = task.id_task) }}" class="btn btn-warning"> <i class="fa fa-pencil"></i> </a>
+                            <a href="" onclick="event.preventDefault(); hapus({{ task.id_task }})" class="btn btn-danger"> <i class="fa fa-trash"></i> </a>
+                          </td>
+                      </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTasks" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""> {% if data.edit %} Edit {% else %} Tambah {% endif %} Tugas </h5>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% if data.edit %} {{ url_for('editTask', id = data.edit.id_task) }} {% else %} {{ url_for('createTask') }} {% endif %}" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for=""> Judul Tugas <small style='color: red'> <strong> * </strong></small> </label>
+                <input type="text" class="form-control" required name="judul_tugas" value="{% if data.edit %} {{ data.edit.judul_task }} {% else %} {% endif %}">
+            </div>
+            <div class="form-group">
+              <label for=""> Foto Tugas </label>
+              <input type="file" class="form-control" style="position: unset; opacity: 1;" name="foto_tugas">
+          </div>
+            <div class="form-group">
+                <label for=""> Deskripsi Tugas <small style='color: red'> <strong> * </strong></small> </label>
+                <textarea name="desc_tugas" style="resize: none; min-height: 400px;" class="form-control">{% if data.edit %} {{ data.edit.desc_task }} {% else %} {% endif %}</textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for=""> Mata Kuliah <small style='color: red'> <strong> * </strong></small> </label>
+                        <select name="makul" class="form-control">
+                            <option value=""> -- Pilih Mata Kuliah -- </option>
+                            {% for mk in data.makul %}
+                            <option value="{{ mk.id_makul }}" {% if data.edit %} {% if data.edit.id_makul == mk.id_makul %} selected="selected" {% endif %} {% endif %}> {{ mk.nama_makul }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for=""> Tempat Pengumpulan <small style='color: red'> <strong> * </strong></small> </label>
+                        <select name="platform" class="form-control">
+                            <option value=""> -- Pilih Tempat Pengumpulan -- </option>
+                            {% for pt in data.platform %}
+                            <option value="{{ pt.id_platform }}" {% if data.edit %} {% if data.edit.id_platform == pt.id_platform %} selected="selected" {% endif %} {% endif %}> {{ pt.nama_platform }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label for=""> Waktu Pengerjaan Dimulai <small style='color: red'> <strong> * </strong></small> </label>
+                    <input type="datetime" name="start_date" placeholder="" class="form-control datetimepicker" value="{% if data.edit %} {{ data.edit.date_start }} {% endif %}">
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="form-group">
+                    <label for=""> Waktu Pengerjaan Selesai <small style='color: red'> <strong> * </strong></small> </label>
+                    <input type="datetime" name="end_date" placeholder="" class="form-control datetimepicker" value="{% if data.edit %} {{ data.edit.date_end }} {% endif %}">
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for=""> Waktu Pengingat <small style='color: red'> <strong> * </strong></small> </label>
+                <input type="datetime" name="schedule_date" placeholder="" class="form-control datetimepicker" value="{% if data.edit %} {{ data.edit.time_to_send }} {% endif %}">
+            </div>
+        </div>
+        <div class="modal-footer">
+          {% if data.edit %}
+          <button type="button" class="btn btn-secondary" onclick="window.location.href='{{url_for('tasks') }}'"> Batal </button>
+          {% else %}
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+          {% endif %}
+          <button type="submit" class="btn btn-info">Simpan</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    {% if data.edit %}
+      $(document).ready(function(){
+        $("#btnAdd").trigger("click");
+      })
+    {% endif %}
+    function hapus(id){
+        Swal.fire({
+            title: 'Apakah anda yakin ingin menghapus data ini?',
+            showCancelButton: true,
+            confirmButtonText: `Yakin`,
+            cancelButtonText: `Tidak`,
+            cancelButtonColor: '#dd6b55',
+            }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ url_for('deleteTask') }}/" + id, 
+                    type: "POST",
+                    success: function(c){
+                        if (c.status == "success"){
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: c.msg,
+                            timer: 1500
+                            }).then(() => {
+                                window.location.href="{{ url_for('tasks') }}";
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: c.msg,
+                            timer: 1500
+                            });
+                        }
+                    }    
+                });
+            }
+        });
+    }
+    function done(id){
+        Swal.fire({
+            title: 'Apakah anda yakin tugas ini telah selesai?',
+            showCancelButton: true,
+            confirmButtonText: `Yakin`,
+            cancelButtonText: `Tidak`,
+            cancelButtonColor: '#dd6b55',
+            }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ url_for('doneTask') }}/" + id, 
+                    type: "POST",
+                    success: function(c){
+                        if (c.status == "success"){
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: c.msg,
+                            timer: 1500
+                            }).then(() => {
+                                window.location.href="{{ url_for('tasks') }}";
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: c.msg,
+                            timer: 1500
+                            });
+                        }
+                    }    
+                });
+            }
+        });
+    }
+  </script>

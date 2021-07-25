@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="/static/css/monthly.css">
+<div class="card">
+    <div class="card-body">
+        <div class="monthly" id="mycalendar"></div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/monthly.js"></script>
+<script type="text/javascript">
+
+	// var sampleEvents = {
+	// "monthly": [
+	// 	{
+	// 	"id": 1,
+	// 	"name": "Tugas 1",
+	// 	"startdate": "2021-03-20",
+	// 	"enddate": "2021-03-20",
+	// 	"starttime": "12:00",
+	// 	"endtime": "2:00",
+	// 	"color": "#99CCCC",
+	// 	"url": ""
+    //     },
+    //     {
+	// 	"id": 2,
+	// 	"name": "Tugas 2",
+	// 	"startdate": "2021-03-20",
+	// 	"enddate": "2021-03-20",
+	// 	"starttime": "12:00",
+	// 	"endtime": "2:00",
+	// 	"color": "#ffddee",
+	// 	"url": ""
+    //     }
+	// ]
+	// };
+
+	$(window).load( function() {
+		var events;
+		$.ajax({
+			url: '{{ url_for("calendar") }}',
+			dataType: 'JSON',
+			async: false,
+			success: function(c){
+				if (c.status == "success"){
+					events = c.data;
+				}
+			}
+		});
+		$('#mycalendar').monthly({
+			mode: 'event',
+			dataType: 'json',
+			events: events
+		});
+	});
+</script>

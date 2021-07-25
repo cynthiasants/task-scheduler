@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col-12 col-md-4">
+        <div class="card">
+            <div class="card-header card-header-info">
+                <h4 class="card-title">Tambah Tempat Pengumpulan</h4>
+            </div>
+            <div class="card-body">
+                <form action="{% if not val %} {{ url_for('createPlatform') }} {% else %} {{ url_for('editPlatform', id = val.id_platform )}} {% endif %}" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Nama Tempat Pengumpulan" name="nama_platform" value="{{ val.nama_platform }}">
+                    </div>
+                    <div class="pull-right">
+                        {% if val %} 
+                            <button class="btn btn-danger" onclick="window.location.href='{{ url_for('platform') }}'"> <i class="fa fa-minus"></i> &nbsp; Batal </button>
+                            <button class="btn btn-info" type="submit"> <i class="fa fa-plus"></i> &nbsp; Ubah </button>
+                        {% else %} 
+                            <button class="btn btn-info" type="submit"> <i class="fa fa-plus"></i> &nbsp; Tambah </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-8">
+        <div class="card">
+            <div class="card-header card-header-info">
+                <h4 class="card-title">List Tempat Pengumpulan</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hovered table-striped" id="dataTable">
+                        <thead>
+                            <th> No </th>
+                            <th> Nama Platform </th>
+                            <th> Aksi </th>
+                        </thead>
+                        <tbody>
+                            {% for mk in data %}
+                            <tr>
+                                <td> {{ loop.index }} </td>
+                                <td> {{ mk.nama_platform }} </td>
+                                <td width="20%">
+                                    <a href="{{ url_for('editPlatform', id = mk.id_platform) }}" class="btn btn-warning"> <i class="fa fa-pencil"></i> </a>
+                                    <a href="" onclick="event.preventDefault(); hapus({{ mk.id_platform }})" class="btn btn-danger"> <i class="fa fa-trash"></i> </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function hapus(id){
+        Swal.fire({
+            title: 'Apakah anda yakin ingin menghapus data ini?',
+            showCancelButton: true,
+            confirmButtonText: `Yakin`,
+            cancelButtonText: `Tidak`,
+            cancelButtonColor: '#dd6b55',
+            }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ url_for('deletePlatform') }}/" + id, 
+                    type: "POST",
+                    success: function(c){
+                        if (c.status == "success"){
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: c.msg,
+                            timer: 1500
+                            }).then(() => {
+                                window.location.href="{{ url_for('platform') }}";
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: c.msg,
+                            timer: 1500
+                            }).then(() => {
+                                window.location.href="{{ url_for('platform') }}";
+                            });
+                        }
+                    }    
+                });
+            }
+        });
+    }
+</script>
